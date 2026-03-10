@@ -1,70 +1,106 @@
 "use client"
 
 import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { productSchema } from "@/schemas/product-schema"
-import { createProduct } from "@/lib/api"
-import { saveDraft, loadDraft } from "@/lib/draft"
-import { useEffect } from "react"
-
-import BasicSection from "./basic-section"
-import PriceSection from "./price-section"
+import { useWatch } from "react-hook-form"
 import SeoSection from "./seo-section"
-import LocationPicker from "./location-picker"
+import MapSection from "./map-section"
+import ProductPreview from "./product-preview"
 
-import { Button } from "@/components/ui/button"
-
-export default function ProductForm({ data }: { data: any }) {
-  // теперь data определено
-
+export default function ProductForm() {
 
   const form = useForm({
-    resolver: zodResolver(productSchema),
-    defaultValues: loadDraft() ?? {
-      seo_keywords: data.seo_keywords.split(",")
+    defaultValues:{
+      name:"",
+      description_short:"",
+      description_long:"",
+      code:"",
+      marketplace_price:0,
+      seo_title:"",
+      seo_description:"",
+      seo_keywords:[],
+      latitude:null,
+      longitude:null
     }
   })
 
-  const { handleSubmit, watch } = form
+  const preview = useWatch({ control: form.control })
 
-  useEffect(() => {
-    const sub = watch((data) => saveDraft(data))
-    return () => sub.unsubscribe()
-  }, [watch])
+  const onSubmit = async (data:any)=>{
 
-const onSubmit = async (data:any) => {
+    const res = await fetch("/api/create-product",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify(data)
+    })
 
-  const res = await fetch("/api/create-product",{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json"
-    },
-    body:JSON.stringify(data)
-  })
-
-  const json = await res.json()
-
-  console.log("RESULT:", json)
-}
+    const result = await res.json()
+    console.log(result)
+  }
 
   return (
 
     <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-8"
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="grid grid-cols-3 gap-8"
     >
 
-      <BasicSection form={form} />
+      {/* LEFT SIDE FORM */}
+      <div className="col-span-2 space-y-6">
 
-      <PriceSection form={form} />
+        <div className="bg-white rounded-xl border p-6 space-y-4">
 
-      <SeoSection form={form} />
+          <h2 className="text-lg font-semibold">
+            Основная информация
+          </h2>
 
-      <LocationPicker form={form} />
+          <input
+            placeholder="Название товара"
+            {...form.register("name")}
+            className="w-full border rounded-md p-2"
+          />
 
-      <Button type="submit">
-        Создать товар
-      </Button>
+          <input
+            placeholder="Артикул"
+            {...form.register("code")}
+            className="w-full border rounded-md p-2"
+          />
+
+          <input
+            placeholder="Цена"
+            type="number"
+            {...form.register("marketplace_price")}
+            className="w-full border rounded-md p-2"
+          />
+
+          <textarea
+            placeholder="Краткое описание"
+            {...form.register("description_short")}
+            className="w-full border rounded-md p-2"
+          />
+
+          <textarea
+            placeholder="Полное описание"
+            {...form.register("description_long")}
+            className="w-full border rounded-md p-2"
+          />
+
+        </div>
+
+        <SeoSection form={form}/>
+
+        <MapSection form={form}/>
+
+        <button
+          type="submit"
+          className="bg-black text-white px-6 py-3 rounded-lg"
+        >
+          Создать товар
+        </button>
+
+      </div>
+
+      {/* RIGHT SIDE PREVIEW */}
+      <ProductPreview data={preview}/>
 
     </form>
   )

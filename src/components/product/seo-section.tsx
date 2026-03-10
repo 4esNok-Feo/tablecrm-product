@@ -1,34 +1,32 @@
-"use client"
+export default function SeoSection({ form }:any){
 
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+  return(
 
-export default function SeoSection({ form }: any) {
-
-  const { register } = form
-
-  return (
-    <div className="space-y-4">
+    <div className="bg-white border rounded-xl p-6 space-y-4">
 
       <h2 className="text-lg font-semibold">
         SEO
       </h2>
 
-      <Input
-        placeholder="SEO title"
-        {...register("seo_title")}
+      <input
+        placeholder="SEO Title"
+        {...form.register("seo_title")}
+        className="w-full border rounded-md p-2"
       />
 
-      <Textarea
-        placeholder="SEO description"
-        {...register("seo_description")}
+      <textarea
+        placeholder="SEO Description"
+        {...form.register("seo_description")}
+        className="w-full border rounded-md p-2"
       />
 
-      <Input
+      <input
         placeholder="SEO keywords (через запятую)"
-        {...register("seo_keywords")}
+        {...form.register("seo_keywords")}
+        className="w-full border rounded-md p-2"
       />
 
     </div>
+
   )
 }

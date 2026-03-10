@@ -1,11 +1,20 @@
-// app/page.tsx
-import ProductForm from "./products/create/page";
+import Link from "next/link"
 
-export default function HomePage() {
+export default function Page() {
   return (
-    <main style={{ padding: "2rem" }}>
-      <h1 style={{ marginBottom: "1rem" }}>Создание продукта</h1>
-      <ProductForm />
-    </main>
-  );
+    <div className="p-10">
+
+      <h1 className="text-3xl font-bold mb-6">
+        TableCRM Product Module
+      </h1>
+
+      <Link
+        href="/products/create"
+        className="bg-black text-white px-4 py-2 rounded"
+      >
+        Create Product
+      </Link>
+
+    </div>
+  )
 }
