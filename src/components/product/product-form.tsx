@@ -14,7 +14,9 @@ import LocationPicker from "./location-picker"
 
 import { Button } from "@/components/ui/button"
 
-export default function ProductForm() {
+export default function ProductForm({ data }: { data: any }) {
+  // теперь data определено
+
 
   const form = useForm({
     resolver: zodResolver(productSchema),
@@ -30,20 +32,20 @@ export default function ProductForm() {
     return () => sub.unsubscribe()
   }, [watch])
 
-  const onSubmit = async (data: any) => {
+const onSubmit = async (data:any) => {
 
-    await createProduct({
-      ...data,
-      type: "product",
-      unit: 116,
-      category: 2477,
-      cashback_type: "lcard_cashback",
-      global_category_id: 127,
-      chatting_percent: 4
-    })
+  const res = await fetch("/api/create-product",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify(data)
+  })
 
-    alert("Product created")
-  }
+  const json = await res.json()
+
+  console.log("RESULT:", json)
+}
 
   return (
 
