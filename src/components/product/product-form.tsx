@@ -19,7 +19,7 @@ export default function ProductForm() {
   const form = useForm({
     resolver: zodResolver(productSchema),
     defaultValues: loadDraft() ?? {
-      seo_keywords: []
+      seo_keywords: data.seo_keywords.split(",")
     }
   })
 
