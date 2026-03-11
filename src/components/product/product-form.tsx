@@ -27,15 +27,29 @@ export default function ProductForm() {
 
   const onSubmit = async (data:any)=>{
 
-    const res = await fetch("/api/create-product",{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify(data)
-    })
+  const payload = {
+    ...data,
 
-    const result = await res.json()
-    console.log(result)
+    type:"product",
+    unit:116,
+    category:2477,
+    cashback_type:"lcard_cashback",
+    global_category_id:127
   }
+
+  const res = await fetch("/api/create-product",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify(payload)
+  })
+
+  const result = await res.json()
+
+  console.log("RESULT:", result)
+
+}
 
   return (
 
