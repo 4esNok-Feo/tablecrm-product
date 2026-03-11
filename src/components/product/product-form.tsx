@@ -25,16 +25,21 @@ export default function ProductForm() {
 
   const preview = useWatch({ control: form.control })
 
-  const onSubmit = async (data:any)=>{
+const onSubmit = async (data:any)=>{
 
   const payload = {
+
     ...data,
 
     type:"product",
     unit:116,
     category:2477,
     cashback_type:"lcard_cashback",
-    global_category_id:127
+    global_category_id:127,
+
+    seo_keywords: data.seo_keywords
+      ? data.seo_keywords.split(",").map((k:string)=>k.trim())
+      : []
   }
 
   const res = await fetch("/api/create-product",{
@@ -47,7 +52,7 @@ export default function ProductForm() {
 
   const result = await res.json()
 
-  console.log("RESULT:", result)
+  console.log("RESULT:", JSON.stringify(result,null,2))
 
 }
 
