@@ -52,8 +52,11 @@ const onSubmit = async (data:any)=>{
 
   const result = await res.json()
 
-  console.log("RESULT:", JSON.stringify(result,null,2))
+  console.log("RESULT:", result)
 
+  alert("Товар успешно создан!")
+
+  form.reset()
 }
 
   return (
